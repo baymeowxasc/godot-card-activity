@@ -1,140 +1,130 @@
-extends Control
+extends Node2D
 
-# ── Data ──────────────────────────────────────────────────────────────────────
-@export var card_data: CardData   # assign in editor or at runtime
+var mouse_in: bool = false
+var is_dragging: bool = false
+var is_snapped: bool = false
+var snap_target: Vector2 = Vector2.ZERO
+var hand_index: int = -1
+var hand_position: Vector2 = Vector2.ZERO 
 
-# ── State machine ─────────────────────────────────────────────────────────────
-enum State { IN_DECK, IN_HAND, DRAGGING, ON_FIELD, ACTIVATING, DEAD }
-var state: State = State.IN_DECK
 
-# ── Signals ───────────────────────────────────────────────────────────────────
-signal card_dropped(card: Control, world_pos: Vector2)
-signal card_activated(card: Control)
-signal card_sent_to_grave(card: Control)
+var current_slot: Node2D = null 
 
-# ── Node refs ─────────────────────────────────────────────────────────────────
-@onready var sprite     : Sprite2D        = $Sprite2D
-@onready var shadow     : Sprite2D        = $Sprite2D/shadow
-@onready var anim       : AnimationPlayer = $AnimationPlayer
-@onready var drop_area  : Area2D          = $Area2D
+func _ready() -> void:
+	add_to_group("cards")
+	var hand = get_tree().get_first_node_in_group("hand")
+	hand.add_card(self)
 
-# ── Drag internals ────────────────────────────────────────────────────────────
-var last_pos        : Vector2
-var scale_tween     : Tween
-var goal_scale      : Vector2 = Vector2(0.2, 0.2)
+func set_hand_position(pos: Vector2, index: int) -> void:
+	hand_index = index
+	hand_position = pos  
+	snap_to(pos)
 
-const MAX_ROT       : float = 12.5
-const SCALE_DEFAULT := Vector2(0.2,  0.2)
-const SCALE_HOVER   := Vector2(0.22, 0.22)
-const SCALE_DRAG    := Vector2(0.26, 0.26)
+func snap_to(pos: Vector2) -> void:
+	is_snapped = true
+	snap_target = pos
+	is_dragging = false
+	if Mousebrain.node_being_dragged == self:
+		Mousebrain.node_being_dragged = null
 
-# ──────────────────────────────────────────────────────────────────────────────
+func release_snap() -> void:
+	is_snapped = false
+
+func return_to_hand() -> void:
+	snap_to(hand_position)
+
 func _physics_process(delta: float) -> void:
-	match state:
-		State.IN_HAND:   _process_hand(delta)
-		State.DRAGGING:  _process_drag(delta)
-		_:               pass   # other states don't move
+	drag_logic(delta)
 
-# ── Hand hover (mouse over, not held) ─────────────────────────────────────────
-func _process_hand(delta: float) -> void:
-	shadow.position = Vector2(-12, 12).rotated(sprite.rotation)
-	sprite.rotation_degrees = lerp(sprite.rotation_degrees, 0.0, 22.0 * delta)
-	_change_scale(SCALE_DEFAULT)
+func drag_logic(delta: float) -> void:
+	_update_shadow()
 
-func _on_mouse_entered() -> void:
-	if state == State.IN_HAND:
-		_change_scale(SCALE_HOVER)
+	if is_dragging:
+		_update_drag_position(delta)
+	elif is_snapped:
+		_update_snap_position(delta)
 
-func _on_mouse_exited() -> void:
-	if state == State.IN_HAND:
-		_change_scale(SCALE_DEFAULT)
+	_handle_mouse_input(delta)
+	_update_scale_and_zindex(delta)
 
-# ── Drag ──────────────────────────────────────────────────────────────────────
-func _process_drag(delta: float) -> void:
-	shadow.position = Vector2(-12, 12).rotated(sprite.rotation)
-	global_position = lerp(
-		global_position,
-		get_global_mouse_position() - size / 2.0,
-		22.0 * delta
-	)
-	_change_scale(SCALE_DRAG)
-	_set_rotation(delta)
-	sprite.z_index = 100
+func _update_shadow() -> void:
+	$Sprite2D/shadow.position = Vector2(-12, 12).rotated($Sprite2D.rotation)
 
-func _gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if event.pressed and state == State.IN_HAND:
-			_begin_drag()
-		elif not event.pressed and state == State.DRAGGING:
-			_end_drag()
+func _update_drag_position(delta: float) -> void:
+	var target_pos = get_global_mouse_position()
+	var screen_size = get_viewport_rect().size
+	var half_w = $Sprite2D.texture.get_width() * $Sprite2D.scale.x * 0.5
+	var half_h = $Sprite2D.texture.get_height() * $Sprite2D.scale.y * 0.5
+	target_pos.x = clamp(target_pos.x, half_w, screen_size.x - half_w)
+	target_pos.y = clamp(target_pos.y, half_h, screen_size.y - half_h)
+	global_position = lerp(global_position, target_pos, 22.0 * delta)
 
-func _begin_drag() -> void:
-	if Mousebrain.node_being_dragged != null:
-		return
-	state = State.DRAGGING
+func _update_snap_position(delta: float) -> void:
+	global_position = lerp(global_position, snap_target, 18.0 * delta)
+	$Sprite2D.rotation_degrees = lerp($Sprite2D.rotation_degrees, 0.0, 12.0 * delta)
+
+func _handle_mouse_input(delta: float) -> void:
+	if (mouse_in or is_dragging) and (Mousebrain.node_being_dragged == null or Mousebrain.node_being_dragged == self):
+		if Input.is_action_pressed("click"):
+			_start_drag(delta)
+		else:
+			_stop_drag()
+
+func _start_drag(delta: float) -> void:
+	is_dragging = true
+	is_snapped = false
 	Mousebrain.node_being_dragged = self
+	_set_rotation(delta)
+	$Sprite2D.z_index = 100
 
-func _end_drag() -> void:
-	state = State.IN_HAND
-	Mousebrain.node_being_dragged = null
-	sprite.z_index = 0
-	emit_signal("card_dropped", self, global_position)
+	if current_slot != null:
+		current_slot.is_occupied = false
+		current_slot.occupant = null
+		current_slot = null
+		var hand = get_tree().get_first_node_in_group("hand")
+		hand.add_card(self)
 
-# ── Animations (called externally by GameBoard / CardZone) ────────────────────
-func play_flip() -> void:
-	# AnimationPlayer "flip" track: scale.x 1→0→1 with texture swap at midpoint
-	anim.play("flip")
-	await anim.animation_finished
+func _stop_drag() -> void:
+	if is_dragging:
+		return_to_hand()
+	is_dragging = false
+	if Mousebrain.node_being_dragged == self:
+		Mousebrain.node_being_dragged = null
 
-func play_damage() -> void:
-	anim.play("damage")   # shake: position offset keyframes, red flash on modulate
-	await anim.animation_finished
+func _update_scale_and_zindex(delta: float) -> void:
+	if is_dragging:
+		_change_scale(Vector2(0.26, 0.26))
+	elif mouse_in and Mousebrain.node_being_dragged == null:
+		_change_scale(Vector2(0.24, 0.24))
+		$Sprite2D.z_index = 430
+	else:
+		_change_scale(Vector2(0.2, 0.2))
+		if not is_dragging:
+			$Sprite2D.z_index = 0
 
-func play_activate() -> void:
-	state = State.ACTIVATING
-	anim.play("activate") # glow, scale pulse, effect callback mid-animation
-	await anim.animation_finished
-	state = State.ON_FIELD
+func _on_area_2d_mouse_entered() -> void:
+	mouse_in = true
 
-func play_to_grave() -> void:
-	state = State.DEAD
-	anim.play("to_grave") # spin + shrink + fade
-	await anim.animation_finished
-	emit_signal("card_sent_to_grave", self)
-	queue_free()
+func _on_area_2d_mouse_exited() -> void:
+	mouse_in = false
+	if not is_dragging:
+		$Sprite2D.z_index = 0
+		_change_scale(Vector2(0.2, 0.2))
 
-# ── Public API (called by CardZone when snapping) ─────────────────────────────
-func place_on_field(slot_pos: Vector2) -> void:
-	state = State.ON_FIELD
-	create_tween().tween_property(self, "global_position", slot_pos, 0.18)
-	_change_scale(SCALE_DEFAULT)
-
-func return_to_hand(hand_pos: Vector2) -> void:
-	state = State.IN_HAND
-	create_tween().tween_property(self, "global_position", hand_pos, 0.18)
-	_change_scale(SCALE_DEFAULT)
-
-# ── Helpers (unchanged from your version) ─────────────────────────────────────
-func _change_scale(desired: Vector2) -> void:
-	if desired == goal_scale: return
-	if scale_tween: scale_tween.kill()
+var current_goal_scale: Vector2 = Vector2(0.2, 0.2)
+var scale_tween: Tween
+func _change_scale(desired_scale: Vector2) -> void:
+	if desired_scale == current_goal_scale:
+		return
+	if scale_tween:
+		scale_tween.kill()
 	scale_tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
-	scale_tween.tween_property(sprite, "scale", desired, 0.125)
-	goal_scale = desired
+	scale_tween.tween_property($Sprite2D, "scale", desired_scale, 0.125)
+	current_goal_scale = desired_scale
 
+var last_pos: Vector2
+var max_card_rotation: float = 12.5
 func _set_rotation(delta: float) -> void:
-	var desired: float = clamp((global_position - last_pos).x * 0.85, -MAX_ROT, MAX_ROT)
-	sprite.rotation_degrees = lerp(sprite.rotation_degrees, desired, 12.0 * delta)
+	var desired_rotation: float = clamp((global_position - last_pos).x * 0.85, -max_card_rotation, max_card_rotation)
+	$Sprite2D.rotation_degrees = lerp($Sprite2D.rotation_degrees, desired_rotation, 12.0 * delta)
 	last_pos = global_position
-
-# add these to card.gd
-var current_zone: CardZone = null   # set by CardZone when accepted
-
-func set_state(new_state: State) -> void:
-	state = new_state
-
-func face_up() -> void:
-	sprite.texture = card_data.art
-
-func face_down() -> void:
-	sprite.texture = card_data.back

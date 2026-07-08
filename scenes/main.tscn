@@ -1,46 +1,25 @@
-[gd_scene format=3 uid="uid://q2vp7rxdn3no"]
+[gd_scene format=3 uid="uid://rc0p57u2aefr"]
 
-[ext_resource type="PackedScene" uid="uid://n44uhexcd0wk" path="res://scenes/card.tscn" id="1_0xm2m"]
-[ext_resource type="Script" uid="uid://sduvdmns3ae5" path="res://scripts/game.gd" id="1_jyhfs"]
-[ext_resource type="PackedScene" uid="uid://c4ar8ng66wf6p" path="res://scenes/mouse.tscn" id="2_h2yge"]
-[ext_resource type="PackedScene" uid="uid://cop2o6ed6nb7i" path="res://scenes/card_zone.tscn" id="2_tbgi4"]
-[ext_resource type="Texture2D" uid="uid://bd8oqts32kq1k" path="res://assets/card.png" id="3_tbgi4"]
+[ext_resource type="PackedScene" uid="uid://cnk5v7hg587ry" path="res://scenes/card.tscn" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://bxlgcom5umhob" path="res://scripts/main.gd" id="1_jyhfs"]
+[ext_resource type="PackedScene" uid="uid://0e2shunmg7iq" path="res://scenes/card_slot.tscn" id="1_sugp2"]
+[ext_resource type="PackedScene" uid="uid://c4ar8ng66wf6p" path="res://scenes/mouse.tscn" id="3_h2yge"]
+[ext_resource type="Script" uid="uid://bvkuwh62q5d4" path="res://scripts/hand.gd" id="4_jyhfs"]
 
-[node name="main" type="Node2D" unique_id=1577024162]
-
-[node name="game" type="Node" parent="." unique_id=338484287]
+[node name="Main" type="Node2D" unique_id=239487072]
 script = ExtResource("1_jyhfs")
+card_scene = ExtResource("1_ig7tw")
 
-[node name="Zones" type="Node2D" parent="." unique_id=161818765]
+[node name="CardManager" type="Node" parent="." unique_id=441663220]
 
-[node name="Graveyard" parent="Zones" unique_id=759287660 instance=ExtResource("2_tbgi4")]
-position = Vector2(94, 306)
-zone_type = 0
+[node name="CardSlot" parent="." unique_id=732044498 instance=ExtResource("1_sugp2")]
+position = Vector2(502, 257)
 
-[node name="Hand" parent="Zones" unique_id=81557905 instance=ExtResource("2_tbgi4")]
-position = Vector2(526, 546)
-zone_type = 0
+[node name="CardSlot2" parent="." unique_id=1952120798 instance=ExtResource("1_sugp2")]
+position = Vector2(637, 257)
 
-[node name="Field" parent="Zones" unique_id=768728520 instance=ExtResource("2_tbgi4")]
-position = Vector2(526, 301)
-zone_type = 0
+[node name="Hand" type="Node2D" parent="." unique_id=825653170 groups=["hand"]]
+script = ExtResource("4_jyhfs")
 
-[node name="Deck" parent="Zones" unique_id=1118544726 instance=ExtResource("2_tbgi4")]
-position = Vector2(92, 556)
-zone_type = 0
-
-[node name="Sprite2D" type="Sprite2D" parent="Zones/Deck" unique_id=1769666312]
-position = Vector2(0.1250019, 0.29281425)
-scale = Vector2(0.13477801, 0.13477801)
-texture = ExtResource("3_tbgi4")
-
-[node name="Cards" type="Node2D" parent="." unique_id=561834889]
-
-[node name="mouse" parent="." unique_id=1917197661 instance=ExtResource("2_h2yge")]
-position = Vector2(1006, 351)
-
-[node name="card" parent="." unique_id=1832626403 instance=ExtResource("1_0xm2m")]
-offset_left = 935.0
-offset_top = 127.0
-offset_right = 1029.0
-offset_bottom = 275.0
+[node name="mouse" parent="." unique_id=1917197661 instance=ExtResource("3_h2yge")]
+position = Vector2(1093, 580)
