@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://0e2shunmg7iq"]
+
+[ext_resource type="Script" uid="uid://b374infe8x2gg" path="res://scripts/card_slot.gd" id="1_mxh2e"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nye3y"]
+size = Vector2(108, 170)
+
+[node name="CardSlot" type="Node2D" unique_id=732044498]
+script = ExtResource("1_mxh2e")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1760904423]
+offset_left = -54.0
+offset_top = -85.0
+offset_right = 54.0
+offset_bottom = 85.0
+color = Color(0, 0.5141082, 0.2774794, 1)
+
+[node name="Area2D" type="Area2D" parent="." unique_id=297496464]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=711145433]
+shape = SubResource("RectangleShape2D_nye3y")
+
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
+[connection signal="area_exited" from="Area2D" to="." method="_on_area_2d_area_exited"]

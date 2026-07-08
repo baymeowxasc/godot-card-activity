@@ -1,0 +1,24 @@
+# card_slot.gd
+extends Node2D
+
+var card_hovering: Node2D = null
+var is_occupied: bool = false
+var occupant: Node2D = null
+
+func _on_area_2d_area_entered(area: Area2D) -> void:
+	var card = area.get_parent()
+	if card.is_in_group("cards"):
+		card_hovering = card
+
+func _on_area_2d_area_exited(area: Area2D) -> void:
+	if area.get_parent() == card_hovering:
+		card_hovering = null
+
+func _process(_delta: float) -> void:
+	if card_hovering and not is_occupied and Input.is_action_just_released("click"):
+		var hand = get_tree().get_first_node_in_group("hand")
+		hand.remove_card(card_hovering)
+		card_hovering.snap_to(global_position)
+		card_hovering.current_slot = self    
+		is_occupied = true
+		occupant = card_hovering
