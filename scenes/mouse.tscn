@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://c4ar8ng66wf6p"]
+
+[ext_resource type="Texture2D" uid="uid://f2x7owpm6o8h" path="res://assets/mouse.png" id="1_ouscy"]
+[ext_resource type="Script" uid="uid://cwivm7f2mexb2" path="res://scripts/mouse.gd" id="2_ouscy"]
+
+[node name="mouse" type="Sprite2D" unique_id=1917197661]
+z_index = 4096
+scale = Vector2(0.12, 0.12)
+texture = ExtResource("1_ouscy")
+offset = Vector2(125, 200)
+script = ExtResource("2_ouscy")
+
+[node name="shadow" type="Sprite2D" parent="." unique_id=1072350978]
+modulate = Color(0, 0, 0, 0.39215687)
+show_behind_parent = true
+texture = ExtResource("1_ouscy")
+offset = Vector2(125, 200)

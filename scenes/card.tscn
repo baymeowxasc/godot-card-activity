@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://n44uhexcd0wk"]
+
+[ext_resource type="Script" uid="uid://22u2gjsevr08" path="res://scripts/card.gd" id="1_rjlel"]
+[ext_resource type="Texture2D" uid="uid://bd8oqts32kq1k" path="res://assets/card.png" id="2_q5obu"]
+
+[node name="card" type="Control" unique_id=1832626403]
+custom_minimum_size = Vector2(94, 148)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 94.0
+offset_bottom = 148.0
+script = ExtResource("1_rjlel")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=955497851]
+position = Vector2(47.25, 74)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("2_q5obu")
+
+[node name="shadow" type="Sprite2D" parent="Sprite2D" unique_id=296208251]
+modulate = Color(0, 0, 0, 0.39215687)
+show_behind_parent = true
+texture = ExtResource("2_q5obu")
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
