@@ -11,6 +11,8 @@ var current_slot: Node2D = null
 
 func _ready() -> void:
 	add_to_group("cards")
+	# give this card its own material instance
+	$Sprite2D.material = $Sprite2D.material.duplicate()
 	var hand = get_tree().get_first_node_in_group("hand")
 	hand.add_card(self)
 
@@ -151,3 +153,41 @@ func play_draw_animation(deck_pos: Vector2, hand_pos: Vector2) -> void:
 			$Sprite2D.texture = card_data.front_texture
 	)
 	tween.tween_property($Sprite2D, "scale", Vector2(0.2, 0.2), 0.15)
+
+func take_damage(amount: int) -> void:
+	if card_data == null:
+		return
+	card_data.current_health -= amount
+	print(card_data.card_name, " health: ", card_data.current_health, "/", card_data.max_health)
+	if card_data.current_health <= 0:
+		dissolve_and_die()
+
+func die() -> void:
+	var hand = get_tree().get_first_node_in_group("hand")
+	hand.cards.erase(self)
+	if current_slot != null:
+		current_slot.on_card_removed()
+		current_slot = null
+	CardManager.graveyard.receive(self)
+	
+func dissolve_and_die() -> void:
+	var material = $Sprite2D.material
+	if material == null:
+		die()
+		return
+	
+	var tween = create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_LINEAR)
+	tween.tween_method(func(val: float):
+		material.set_shader_parameter("dissolve_value", val)
+	, 1.0, 0.0, 1.2)
+	tween.tween_callback(die)
+
+func reappear() -> void:
+	var material = $Sprite2D.material
+	if material == null:
+		return
+	material.set_shader_parameter("dissolve_value", 0.0)
+	var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_LINEAR)
+	tween.tween_method(func(val: float):
+		material.set_shader_parameter("dissolve_value", val)
+	, 0.0, 1.0, 1.2)

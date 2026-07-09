@@ -5,6 +5,9 @@ var card_hovering: Node2D = null
 var is_occupied: bool = false
 var occupant: Node2D = null
 
+func _ready() -> void:
+	add_to_group("card_slots")
+
 func _on_area_2d_area_entered(area: Area2D) -> void:
 	if is_occupied:
 		return

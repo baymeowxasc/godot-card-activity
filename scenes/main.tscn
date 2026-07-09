@@ -9,6 +9,8 @@
 [ext_resource type="PackedScene" uid="uid://sain0aqrcddg" path="res://scenes/deck.tscn" id="7_o6xl0"]
 [ext_resource type="Script" uid="uid://o3pxkatviou4" path="res://scripts/card_data.gd" id="8_85g3d"]
 [ext_resource type="Resource" uid="uid://djfikxq4v487d" path="res://resources/card1.tres" id="9_choun"]
+[ext_resource type="Script" uid="uid://crwjy1klfnxpj" path="res://scripts/graveyard.gd" id="9_ya4ey"]
+[ext_resource type="Script" uid="uid://bt24kov2jvhcq" path="res://scripts/button.gd" id="11_ya4ey"]
 
 [node name="Main" type="Node2D" unique_id=239487072]
 script = ExtResource("1_jyhfs")
@@ -20,9 +22,6 @@ script = ExtResource("3_tefeu")
 [node name="CardSlot" parent="." unique_id=732044498 instance=ExtResource("1_sugp2")]
 position = Vector2(564, 231)
 
-[node name="CardSlot2" parent="." unique_id=1952120798 instance=ExtResource("1_sugp2")]
-position = Vector2(1037, 525)
-
 [node name="Deck" parent="." unique_id=1033326479 instance=ExtResource("7_o6xl0")]
 position = Vector2(95, 515)
 card_data_list = Array[ExtResource("8_85g3d")]([ExtResource("9_choun"), ExtResource("9_choun"), ExtResource("9_choun"), ExtResource("9_choun"), ExtResource("9_choun")])
@@ -30,5 +29,27 @@ card_data_list = Array[ExtResource("8_85g3d")]([ExtResource("9_choun"), ExtResou
 [node name="Hand" type="Node2D" parent="." unique_id=825653170 groups=["hand"]]
 script = ExtResource("4_jyhfs")
 
+[node name="Graveyard" type="Node2D" parent="." unique_id=577332699]
+position = Vector2(100, 231)
+script = ExtResource("9_ya4ey")
+
+[node name="ColorRect" type="ColorRect" parent="Graveyard" unique_id=1261784027]
+offset_left = -52.0
+offset_top = -82.0
+offset_right = 59.0
+offset_bottom = 86.0
+color = Color(0, 0, 0, 0.19607843)
+
 [node name="mouse" parent="." unique_id=1917197661 instance=ExtResource("3_h2yge")]
 position = Vector2(1093, 580)
+
+[node name="Button" type="Button" parent="." unique_id=1698874099]
+offset_left = 507.0
+offset_top = 105.0
+offset_right = 621.0
+offset_bottom = 136.0
+text = "Deal Damage"
+script = ExtResource("11_ya4ey")
+target_slot = NodePath("../CardSlot")
+
+[connection signal="pressed" from="Button" to="Button" method="_on_pressed"]
