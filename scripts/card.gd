@@ -159,8 +159,16 @@ func take_damage(amount: int) -> void:
 		return
 	card_data.current_health -= amount
 	print(card_data.card_name, " health: ", card_data.current_health, "/", card_data.max_health)
+	if card_data.current_health > 0:
+		play_hit_animation()
 	if card_data.current_health <= 0:
 		dissolve_and_die()
+		
+func play_hit_animation() -> void:
+	var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
+	var origin = $Sprite2D.position
+	tween.tween_property($Sprite2D, "position", origin + Vector2(8, 0), 0.05)
+	tween.tween_property($Sprite2D, "position", origin, 0.3)
 
 func die() -> void:
 	var hand = get_tree().get_first_node_in_group("hand")

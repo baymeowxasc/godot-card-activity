@@ -36,9 +36,10 @@ script = ExtResource("9_ya4ey")
 [node name="ColorRect" type="ColorRect" parent="Graveyard" unique_id=1261784027]
 offset_left = -52.0
 offset_top = -82.0
-offset_right = 59.0
-offset_bottom = 86.0
+offset_right = 56.0
+offset_bottom = 80.0
 color = Color(0, 0, 0, 0.19607843)
+metadata/_edit_use_anchors_ = true
 
 [node name="mouse" parent="." unique_id=1917197661 instance=ExtResource("3_h2yge")]
 position = Vector2(1093, 580)
