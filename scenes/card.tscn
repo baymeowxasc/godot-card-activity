@@ -4,20 +4,24 @@
 [ext_resource type="Texture2D" uid="uid://djn0fuktgjcdy" path="res://assets/card.png" id="2_ktuci"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nye3y"]
-size = Vector2(108, 170)
+size = Vector2(122, 170)
 
 [node name="Card" type="Node2D" unique_id=1793291816]
 script = ExtResource("1_6u4wf")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1690292590]
-position = Vector2(0, 7.6293945e-06)
-scale = Vector2(0.22885834, 0.22885832)
-texture = ExtResource("2_ktuci")
+position = Vector2(-3.33786e-06, -7.6293945e-06)
+scale = Vector2(0.2579281, 0.23081078)
 
 [node name="shadow" type="Sprite2D" parent="Sprite2D" unique_id=1280627354]
+visible = false
 modulate = Color(0, 0, 0, 0.39215687)
 show_behind_parent = true
 texture = ExtResource("2_ktuci")
+
+[node name="Back" type="Sprite2D" parent="." unique_id=1936623746]
+position = Vector2(0.25001335, -0.05001831)
+scale = Vector2(0.8099998, 0.8099998)
 
 [node name="Area2D" type="Area2D" parent="." unique_id=1528165328]
 

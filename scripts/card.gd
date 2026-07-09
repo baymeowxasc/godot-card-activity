@@ -64,6 +64,8 @@ func _update_snap_position(delta: float) -> void:
 	$Sprite2D.rotation_degrees = lerp($Sprite2D.rotation_degrees, 0.0, 12.0 * delta)
 
 func _handle_mouse_input(delta: float) -> void:
+	if current_slot != null:
+		return
 	if (mouse_in or is_dragging) and (Mousebrain.node_being_dragged == null or Mousebrain.node_being_dragged == self):
 		if Input.is_action_pressed("click"):
 			_start_drag(delta)
@@ -91,10 +93,10 @@ func _stop_drag() -> void:
 	if Mousebrain.node_being_dragged == self:
 		Mousebrain.node_being_dragged = null
 
-func _update_scale_and_zindex(delta: float) -> void:
+func _update_scale_and_zindex(_delta: float) -> void:
 	if is_dragging:
 		_change_scale(Vector2(0.26, 0.26))
-	elif mouse_in and Mousebrain.node_being_dragged == null:
+	elif mouse_in and Mousebrain.node_being_dragged == null and current_slot == null:
 		_change_scale(Vector2(0.24, 0.24))
 		$Sprite2D.z_index = 430
 	else:
@@ -128,3 +130,13 @@ func _set_rotation(delta: float) -> void:
 	var desired_rotation: float = clamp((global_position - last_pos).x * 0.85, -max_card_rotation, max_card_rotation)
 	$Sprite2D.rotation_degrees = lerp($Sprite2D.rotation_degrees, desired_rotation, 12.0 * delta)
 	last_pos = global_position
+	
+var card_data: CardData = null
+
+func setup(data: CardData) -> void:
+	card_data = data
+	if data.front_texture:
+		$Sprite2D.texture = data.front_texture      # front shown by default
+	if data.back_texture:
+		$Back.texture = data.back_texture  # back node hidden, ready for flip
+	$Back.visible = false
