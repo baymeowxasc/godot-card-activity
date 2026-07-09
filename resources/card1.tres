@@ -2,12 +2,12 @@
 
 [ext_resource type="Texture2D" uid="uid://djn0fuktgjcdy" path="res://assets/card.png" id="1_i6m55"]
 [ext_resource type="Script" uid="uid://o3pxkatviou4" path="res://scripts/card_data.gd" id="1_rn51s"]
-[ext_resource type="Texture2D" uid="uid://cvc0g8onfj5qb" path="res://assets/cardBack1.png" id="2_m0pqm"]
+[ext_resource type="Texture2D" uid="uid://bf0n8j8c4y5l5" path="res://assets/cardBack12.png" id="2_i6m55"]
 
 [resource]
 script = ExtResource("1_rn51s")
 card_name = "TEST"
 health = 5
-front_texture = ExtResource("2_m0pqm")
+front_texture = ExtResource("2_i6m55")
 back_texture = ExtResource("1_i6m55")
 metadata/_custom_type_script = "uid://o3pxkatviou4"

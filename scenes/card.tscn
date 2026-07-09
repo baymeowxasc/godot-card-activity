@@ -28,7 +28,5 @@ scale = Vector2(0.8099998, 0.8099998)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=874560159]
 shape = SubResource("RectangleShape2D_nye3y")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=199052556]
-
 [connection signal="mouse_entered" from="Area2D" to="." method="_on_area_2d_mouse_entered"]
 [connection signal="mouse_exited" from="Area2D" to="." method="_on_area_2d_mouse_exited"]

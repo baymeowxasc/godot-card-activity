@@ -135,8 +135,20 @@ var card_data: CardData = null
 
 func setup(data: CardData) -> void:
 	card_data = data
-	if data.front_texture:
-		$Sprite2D.texture = data.front_texture      # front shown by default
 	if data.back_texture:
-		$Back.texture = data.back_texture  # back node hidden, ready for flip
-	$Back.visible = false
+		$Sprite2D.texture = data.back_texture
+	$Sprite2D.scale = Vector2(0.2, 0.2)
+
+func play_draw_animation(deck_pos: Vector2, hand_pos: Vector2) -> void:
+	global_position = deck_pos
+	is_snapped = false
+
+	var tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+
+	tween.tween_property(self, "global_position", hand_pos, 0.35)
+	tween.tween_property($Sprite2D, "scale", Vector2(0.0, 0.2), 0.15)
+	tween.tween_callback(func():
+		if card_data.front_texture:
+			$Sprite2D.texture = card_data.front_texture
+	)
+	tween.tween_property($Sprite2D, "scale", Vector2(0.2, 0.2), 0.15)

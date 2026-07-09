@@ -25,7 +25,7 @@ position = Vector2(637, 257)
 
 [node name="Deck" parent="." unique_id=1033326479 instance=ExtResource("7_o6xl0")]
 position = Vector2(95, 515)
-card_data_list = Array[ExtResource("8_85g3d")]([ExtResource("9_choun")])
+card_data_list = Array[ExtResource("8_85g3d")]([ExtResource("9_choun"), ExtResource("9_choun"), ExtResource("9_choun"), ExtResource("9_choun"), ExtResource("9_choun")])
 
 [node name="Hand" type="Node2D" parent="." unique_id=825653170 groups=["hand"]]
 script = ExtResource("4_jyhfs")
