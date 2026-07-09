@@ -7,7 +7,6 @@ var snap_target: Vector2 = Vector2.ZERO
 var hand_index: int = -1
 var hand_position: Vector2 = Vector2.ZERO 
 
-
 var current_slot: Node2D = null 
 
 func _ready() -> void:

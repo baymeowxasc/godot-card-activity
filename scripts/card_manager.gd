@@ -12,12 +12,12 @@ func draw_card(data: CardData = null, deck_pos: Vector2 = Vector2.ZERO) -> void:
 		push_error("CardManager: card_scene is not set")
 		return
 	var card = card_scene.instantiate()
+	card.global_position = deck_pos  # set position BEFORE adding to tree
 	get_tree().root.add_child(card)
 	if data != null:
 		card.setup(data)
-		# Wait one frame for hand to register the card and assign hand_position
-		await get_tree().process_frame
-		card.play_draw_animation(deck_pos, card.hand_position)
+	await get_tree().process_frame
+	card.play_draw_animation(deck_pos, card.hand_position)
 
 func discard_card(card: Node2D) -> void:
 	get_hand().remove_card(card)

@@ -18,10 +18,10 @@ card_scene = ExtResource("1_ig7tw")
 script = ExtResource("3_tefeu")
 
 [node name="CardSlot" parent="." unique_id=732044498 instance=ExtResource("1_sugp2")]
-position = Vector2(497, 256)
+position = Vector2(564, 231)
 
 [node name="CardSlot2" parent="." unique_id=1952120798 instance=ExtResource("1_sugp2")]
-position = Vector2(637, 257)
+position = Vector2(1037, 525)
 
 [node name="Deck" parent="." unique_id=1033326479 instance=ExtResource("7_o6xl0")]
 position = Vector2(95, 515)

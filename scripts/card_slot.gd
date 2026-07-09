@@ -26,7 +26,7 @@ func _process(_delta: float) -> void:
 		card_hovering.current_slot = self    
 		is_occupied = true
 		occupant = card_hovering
-		card_hovering = null   # clear hover reference
+		card_hovering = null  
 		$Area2D.monitoring = false
 		
 func on_card_removed() -> void:

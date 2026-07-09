@@ -1,24 +1,23 @@
 [gd_scene format=3 uid="uid://sain0aqrcddg"]
 
 [ext_resource type="Script" uid="uid://l76lb7m484u2" path="res://scripts/deck.gd" id="1_sdhao"]
+[ext_resource type="Texture2D" uid="uid://djn0fuktgjcdy" path="res://assets/card.png" id="2_6rnap"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nye3y"]
-size = Vector2(114, 176)
+size = Vector2(114, 178)
 
 [node name="Deck" type="Node2D" unique_id=1033326479]
 script = ExtResource("1_sdhao")
+
+[node name="Card" type="Sprite2D" parent="." unique_id=2137777932]
+position = Vector2(0, 1.1920929e-07)
+scale = Vector2(0.23942918, 0.23942916)
+texture = ExtResource("2_6rnap")
 
 [node name="Area2D" type="Area2D" parent="." unique_id=702942983]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1833924275]
 shape = SubResource("RectangleShape2D_nye3y")
-
-[node name="ColorRect" type="ColorRect" parent="." unique_id=283130945]
-visible = false
-offset_left = -56.0
-offset_top = -87.0
-offset_right = 57.0
-offset_bottom = 87.0
 
 [connection signal="mouse_entered" from="Area2D" to="." method="_on_area_2d_mouse_entered"]
 [connection signal="mouse_exited" from="Area2D" to="." method="_on_area_2d_mouse_exited"]
