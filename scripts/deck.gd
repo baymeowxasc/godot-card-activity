@@ -24,6 +24,7 @@ func _process(_delta: float) -> void:
 
 func draw_card() -> void:
 	if draw_pile.is_empty():
+		print("deck is empty")
 		return
 	var data = draw_pile.pop_back()
 	CardManager.draw_card(data, global_position)

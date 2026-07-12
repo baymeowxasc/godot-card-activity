@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" format=3 uid="uid://18t1x4xf5nex"]
+
+[ext_resource type="Script" uid="uid://o3pxkatviou4" path="res://scripts/card_data.gd" id="1_7ae68"]
+[ext_resource type="Texture2D" uid="uid://djn0fuktgjcdy" path="res://assets/card.png" id="1_gs3yv"]
+[ext_resource type="Texture2D" uid="uid://bf0n8j8c4y5l5" path="res://assets/cardBack12.png" id="2_aswcg"]
+
+[resource]
+script = ExtResource("1_7ae68")
+card_name = "basic3"
+front_texture = ExtResource("2_aswcg")
+back_texture = ExtResource("1_gs3yv")
+max_health = 20
+metadata/_custom_type_script = "uid://o3pxkatviou4"

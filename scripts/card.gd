@@ -31,6 +31,8 @@ func setup(data: CardData) -> void:
 	if data.back_texture:
 		$Sprite2D.texture = data.back_texture
 	$Sprite2D.scale = Vector2(0.2, 0.2)
+	$HealthLabel.text = str(card_data.current_health)
+	$HealthLabel.z_index = 10  # draw on top of sprite
 
 func play_draw_animation(deck_pos: Vector2, hand_pos: Vector2) -> void:
 	visuals.play_draw_animation(deck_pos, hand_pos)
@@ -42,9 +44,10 @@ func take_damage(amount: int) -> void:
 	if card_data == null:
 		return
 	card_data.current_health -= amount
+	$HealthLabel.text = str(card_data.current_health)
 	print(card_data.card_name, " health: ", card_data.current_health, "/", card_data.max_health)
 	if card_data.current_health > 0:
-		visuals.play_hit_animation()
+		visuals.play_hit_animation(amount)
 	else:
 		visuals.dissolve(die)
 
@@ -63,3 +66,6 @@ func _on_area_2d_mouse_exited() -> void:
 	if not drag.is_dragging:
 		$Sprite2D.z_index = 0
 		drag.change_scale(Vector2(0.2, 0.2))
+
+func set_health_label_visible(value: bool) -> void:
+	$HealthLabel.visible = value

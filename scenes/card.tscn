@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://dcts6j3045do5" path="res://scripts/card.gd" id="1_6u4wf"]
 [ext_resource type="Shader" uid="uid://chdisxs4vormp" path="res://assets/shaders/dissolve.gdshader" id="2_kg30u"]
 [ext_resource type="Texture2D" uid="uid://djn0fuktgjcdy" path="res://assets/card.png" id="2_ktuci"]
+[ext_resource type="Texture2D" uid="uid://bf0n8j8c4y5l5" path="res://assets/cardBack12.png" id="3_kg30u"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_trceg"]
 frequency = 0.0035
@@ -16,6 +17,7 @@ shader_parameter/dissolve_texture = SubResource("NoiseTexture2D_eb6dy")
 shader_parameter/dissolve_value = 1.0
 shader_parameter/burn_size = 0.03999999910592
 shader_parameter/burn_color = Color(0.57269555, 0, 0, 1)
+shader_parameter/flash_color = Color(0, 0, 0, 0)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nye3y"]
 size = Vector2(122, 170)
@@ -23,11 +25,18 @@ size = Vector2(122, 170)
 [node name="Card" type="Node2D" unique_id=1793291816]
 script = ExtResource("1_6u4wf")
 
+[node name="HealthLabel" type="Label" parent="." unique_id=310356311]
+offset_left = -56.0
+offset_top = -81.0
+offset_right = -22.0
+offset_bottom = -44.0
+text = "12"
+
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1690292590]
 material = SubResource("ShaderMaterial_ya4ey")
 position = Vector2(9.536743e-07, 2.9802322e-08)
 scale = Vector2(0.2579281, 0.2297297)
-texture = ExtResource("2_ktuci")
+texture = ExtResource("3_kg30u")
 
 [node name="shadow" type="Sprite2D" parent="Sprite2D" unique_id=1501623329]
 visible = false
@@ -38,9 +47,11 @@ position = Vector2(0.25001335, -0.05001831)
 scale = Vector2(0.8099998, 0.8099998)
 
 [node name="Area2D" type="Area2D" parent="." unique_id=1528165328]
+metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=874560159]
 shape = SubResource("RectangleShape2D_nye3y")
+metadata/_edit_lock_ = true
 
 [connection signal="mouse_entered" from="Area2D" to="." method="_on_area_2d_mouse_entered"]
 [connection signal="mouse_exited" from="Area2D" to="." method="_on_area_2d_mouse_exited"]
