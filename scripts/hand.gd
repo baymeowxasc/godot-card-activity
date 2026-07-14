@@ -20,5 +20,5 @@ func arrange() -> void:
 	var count = cards.size()
 	for i in count:
 		var t = 0.5 if count == 1 else float(i) / (count - 1)
-		var x = lerp(-spread * (count - 1) * 0.5, spread * (count - 1) * 0.5, t)
+		var x = lerp(-spread * (count - 1) * 0.45, spread * (count - 1) * 0.45, t)
 		cards[i].set_hand_position(global_position + Vector2(x, 0), i)
