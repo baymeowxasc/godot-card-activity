@@ -10,4 +10,6 @@ card_name = "TEST"
 front_texture = ExtResource("2_i6m55")
 back_texture = ExtResource("1_i6m55")
 max_health = 15
+block_charges = 2
+block_chance = 0.295
 metadata/_custom_type_script = "uid://o3pxkatviou4"
