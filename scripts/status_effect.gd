@@ -2,8 +2,8 @@ extends Node
 class_name StatusEffect
 
 var card: Node2D
-var block_charges: int = 0   # each charge absorbs one hit
-var poison_stacks: int = 0   # each stack deals 1 damage per tick
+var block_charges: int = 0  
+var poison_stacks: int = 0   
 
 var _block_label: Label = null
 var _poison_label: Label = null
@@ -34,7 +34,6 @@ func add_poison(stacks: int = 1) -> void:
 	_refresh_poison_label()
 	card.visuals.play_poison_apply_animation()
 	_animate_icon_appear(_poison_label)
-
 
 func tick_poison() -> void:
 	if poison_stacks <= 0:

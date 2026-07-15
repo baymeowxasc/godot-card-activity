@@ -61,6 +61,8 @@ offset_right = 684.0
 offset_bottom = 126.0
 text = "Deal Poison"
 script = ExtResource("12_eb6dy")
+target_slot = NodePath("../CardSlot")
+action = 1
 
 [connection signal="pressed" from="Button" to="Button" method="_on_pressed"]
 [connection signal="pressed" from="Button2" to="Button2" method="_on_pressed"]

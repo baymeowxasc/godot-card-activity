@@ -79,6 +79,102 @@ func spawn_damage_number(amount: int) -> void:
 	tween.tween_property(label, "modulate:a", 0.0, 0.6).set_delay(0.2)
 	tween.tween_callback(label.queue_free).set_delay(0.75)
 
+# ─── Block animation ──────────────────────────────────────────────────────────
+# White flash + brief scale-punch to show the hit was absorbed.
+func play_block_animation() -> void:
+	var sprite = get_sprite()
+	var mat = get_material()
+
+	# Scale punch (smaller than a real hit — just a shudder)
+	var origin_scale = sprite.scale
+	var block_tween = card.create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
+	block_tween.tween_property(sprite, "scale", origin_scale * 1.12, 0.06)
+	block_tween.tween_property(sprite, "scale", origin_scale, 0.25)
+
+	# White-blue flash (shield color) via shader
+	if mat:
+		mat.set_shader_parameter("flash_color", Color(0.6, 0.85, 1.0, 1.0))
+		var flash_tween = card.create_tween()
+		flash_tween.tween_method(
+			func(val: float): mat.set_shader_parameter("flash_color", Color(0.6, 0.85, 1.0, val)),
+			1.0, 0.0, 0.35
+		)
+
+	# Floating "BLOCKED" text
+	_spawn_status_text("BLOCK", Color(0.5, 0.85, 1.0))
+
+func play_poison_apply_animation() -> void:
+	var sprite = get_sprite()
+	var mat = get_material()
+
+	var origin_rot = sprite.rotation
+	var wobble = card.create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
+	wobble.tween_property(sprite, "rotation", origin_rot - 0.12, 0.08)
+	wobble.tween_property(sprite, "rotation", origin_rot + 0.10, 0.10)
+	wobble.tween_property(sprite, "rotation", origin_rot, 0.12)
+
+	# Green flash
+	if mat:
+		mat.set_shader_parameter("flash_color", Color(0.1, 1.0, 0.25, 0.9))
+		var flash_tween = card.create_tween()
+		flash_tween.tween_method(
+			func(val: float): mat.set_shader_parameter("flash_color", Color(0.1, 1.0, 0.25, val)),
+			0.9, 0.0, 0.5
+		)
+
+	_spawn_status_text("POISON", Color(0.2, 1.0, 0.3))
+
+# Pulsing green glow + damage number each poison tick.
+func play_poison_tick_animation(stacks: int) -> void:
+	var sprite = get_sprite()
+	var mat = get_material()
+	var origin_scale = sprite.scale
+
+	# Gentle swell
+	var swell = card.create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
+	swell.tween_property(sprite, "scale", origin_scale * 1.08, 0.12)
+	swell.tween_property(sprite, "scale", origin_scale, 0.22)
+
+	# Dim green pulse
+	if mat:
+		mat.set_shader_parameter("flash_color", Color(0.05, 0.85, 0.2, 0.6))
+		var flash_tween = card.create_tween()
+		flash_tween.tween_method(
+			func(val: float): mat.set_shader_parameter("flash_color", Color(0.05, 0.85, 0.2, val)),
+			0.6, 0.0, 0.45
+		)
+
+	_spawn_damage_number_colored(stacks, Color(0.2, 1.0, 0.3))
+
+# ─── Shared helpers ───────────────────────────────────────────────────────────
+func _spawn_status_text(text: String, color: Color) -> void:
+	var label = Label.new()
+	label.text = text
+	label.add_theme_font_size_override("font_size", 14)
+	label.modulate = color
+	var scene_root = card.get_tree().current_scene
+	scene_root.add_child(label)
+	label.global_position = card.global_position + Vector2(randf_range(-20, 20), -72)
+
+	var tween = card.create_tween().set_parallel(true)
+	tween.tween_property(label, "global_position", label.global_position + Vector2(randf_range(-8, 8), -38), 0.65)
+	tween.tween_property(label, "modulate:a", 0.0, 0.55).set_delay(0.15)
+	tween.tween_callback(label.queue_free).set_delay(0.7)
+
+func _spawn_damage_number_colored(amount: int, color: Color) -> void:
+	var label = Label.new()
+	label.text = "-%d" % amount
+	label.add_theme_font_size_override("font_size", clamp(16 + amount * 3, 18, 36))
+	label.modulate = color
+	var scene_root = card.get_tree().current_scene
+	scene_root.add_child(label)
+	label.global_position = card.global_position + Vector2(randf_range(-15, 15), -60)
+
+	var tween = card.create_tween().set_parallel(true)
+	tween.tween_property(label, "global_position", label.global_position + Vector2(randf_range(-10, 10), -50), 0.7)
+	tween.tween_property(label, "modulate:a", 0.0, 0.6).set_delay(0.2)
+	tween.tween_callback(label.queue_free).set_delay(0.75)
+
 func dissolve(on_complete: Callable) -> void:
 	var mat = get_material()
 	if mat == null:
