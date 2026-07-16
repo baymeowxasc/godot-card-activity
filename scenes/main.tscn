@@ -11,7 +11,6 @@
 [ext_resource type="Resource" uid="uid://djfikxq4v487d" path="res://resources/card1.tres" id="9_choun"]
 [ext_resource type="Script" uid="uid://crwjy1klfnxpj" path="res://scripts/graveyard.gd" id="9_ya4ey"]
 [ext_resource type="Script" uid="uid://bt24kov2jvhcq" path="res://scripts/button.gd" id="11_ya4ey"]
-[ext_resource type="Script" uid="uid://k41t2iubpr0q" path="res://scripts/poison.gd" id="12_eb6dy"]
 
 [node name="Main" type="Node2D" unique_id=239487072]
 script = ExtResource("1_jyhfs")
@@ -60,7 +59,7 @@ offset_top = 95.0
 offset_right = 684.0
 offset_bottom = 126.0
 text = "Deal Poison"
-script = ExtResource("12_eb6dy")
+script = ExtResource("11_ya4ey")
 target_slot = NodePath("../CardSlot")
 action = 1
 

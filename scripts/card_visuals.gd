@@ -18,7 +18,7 @@ func get_health_label() -> Label:
 func play_draw_animation(deck_pos: Vector2, hand_pos: Vector2) -> void:
 	card.global_position = deck_pos
 	card.drag.is_snapped = false
-	get_health_label().visible = false  # hide during travel
+	get_health_label().visible = false  
 
 	var tween = card.create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 	tween.tween_property(card, "global_position", hand_pos, 0.35)
@@ -29,7 +29,7 @@ func play_draw_animation(deck_pos: Vector2, hand_pos: Vector2) -> void:
 	)
 	tween.tween_property(get_sprite(), "scale", Vector2(0.2, 0.2), 0.15)
 	tween.tween_callback(func():
-		get_health_label().visible = true  # reveal after flip completes
+		get_health_label().visible = true  
 	)
 
 func play_hit_animation(amount: int) -> void:
@@ -46,8 +46,7 @@ func play_hit_animation(amount: int) -> void:
 	punch_tween.tween_property(sprite, "scale", Vector2(scale_punch, scale_punch), 0.05)
 	punch_tween.tween_property(sprite, "position", origin, 0.3)
 	punch_tween.tween_property(sprite, "scale", Vector2(0.2, 0.2), 0.3)
-
-	# Red flash via shader parameter
+	
 	if mat:
 		mat.set_shader_parameter("flash_color", Color(1.0, 0.0, 0.0, 0.8))
 		var flash_tween = card.create_tween()
@@ -79,19 +78,15 @@ func spawn_damage_number(amount: int) -> void:
 	tween.tween_property(label, "modulate:a", 0.0, 0.6).set_delay(0.2)
 	tween.tween_callback(label.queue_free).set_delay(0.75)
 
-# ─── Block animation ──────────────────────────────────────────────────────────
-# White flash + brief scale-punch to show the hit was absorbed.
 func play_block_animation() -> void:
 	var sprite = get_sprite()
 	var mat = get_material()
-
-	# Scale punch (smaller than a real hit — just a shudder)
+	
 	var origin_scale = sprite.scale
 	var block_tween = card.create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
 	block_tween.tween_property(sprite, "scale", origin_scale * 1.12, 0.06)
 	block_tween.tween_property(sprite, "scale", origin_scale, 0.25)
-
-	# White-blue flash (shield color) via shader
+	
 	if mat:
 		mat.set_shader_parameter("flash_color", Color(0.6, 0.85, 1.0, 1.0))
 		var flash_tween = card.create_tween()
@@ -99,8 +94,7 @@ func play_block_animation() -> void:
 			func(val: float): mat.set_shader_parameter("flash_color", Color(0.6, 0.85, 1.0, val)),
 			1.0, 0.0, 0.35
 		)
-
-	# Floating "BLOCKED" text
+		
 	_spawn_status_text("BLOCK", Color(0.5, 0.85, 1.0))
 
 func play_poison_apply_animation() -> void:
@@ -112,8 +106,7 @@ func play_poison_apply_animation() -> void:
 	wobble.tween_property(sprite, "rotation", origin_rot - 0.12, 0.08)
 	wobble.tween_property(sprite, "rotation", origin_rot + 0.10, 0.10)
 	wobble.tween_property(sprite, "rotation", origin_rot, 0.12)
-
-	# Green flash
+	
 	if mat:
 		mat.set_shader_parameter("flash_color", Color(0.1, 1.0, 0.25, 0.9))
 		var flash_tween = card.create_tween()
@@ -124,18 +117,15 @@ func play_poison_apply_animation() -> void:
 
 	_spawn_status_text("POISON", Color(0.2, 1.0, 0.3))
 
-# Pulsing green glow + damage number each poison tick.
 func play_poison_tick_animation(stacks: int) -> void:
 	var sprite = get_sprite()
 	var mat = get_material()
 	var origin_scale = sprite.scale
-
-	# Gentle swell
+	
 	var swell = card.create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
 	swell.tween_property(sprite, "scale", origin_scale * 1.08, 0.12)
 	swell.tween_property(sprite, "scale", origin_scale, 0.22)
-
-	# Dim green pulse
+	
 	if mat:
 		mat.set_shader_parameter("flash_color", Color(0.05, 0.85, 0.2, 0.6))
 		var flash_tween = card.create_tween()
@@ -146,7 +136,6 @@ func play_poison_tick_animation(stacks: int) -> void:
 
 	_spawn_damage_number_colored(stacks, Color(0.2, 1.0, 0.3))
 
-# ─── Shared helpers ───────────────────────────────────────────────────────────
 func _spawn_status_text(text: String, color: Color) -> void:
 	var label = Label.new()
 	label.text = text

@@ -5,7 +5,6 @@ var card_data: CardData = null
 
 var drag: CardDrag
 var visuals: CardVisuals
-
 var status: StatusEffect
 
 func _ready() -> void:
@@ -37,7 +36,7 @@ func setup(data: CardData) -> void:
 		$Sprite2D.texture = data.back_texture
 	$Sprite2D.scale = Vector2(0.2, 0.2)
 	$HealthLabel.text = str(card_data.current_health)
-	$HealthLabel.z_index = 10
+	$HealthLabel.z_index = 10  # draw on top of sprite
 	var starting_block = card_data.roll_starting_block()
 	if starting_block > 0:
 		status.add_block(starting_block)
@@ -61,19 +60,28 @@ func take_damage(amount: int) -> void:
 	else:
 		visuals.dissolve(die)
 
-func apply_poison(stacks: int = 1) -> void:
-	status.add_poison(stacks)
+func apply_poison(_unused: int = 1) -> void:
+	var ticks = randi_range(1, 3)
+	var damages: Array[int] = []
+	for i in ticks:
+		damages.append(randi_range(1, 3))
 
-func tick_poison() -> void:
-	if status.poison_stacks <= 0:
+	status.add_poison(ticks)
+
+	for i in ticks:
+		var delay = 0.35 + i * 0.55
+		get_tree().create_timer(delay).timeout.connect(
+			_do_poison_tick.bind(damages[i])
+		)
+
+func _do_poison_tick(dmg: int) -> void:
+	if card_data == null or card_data.current_health <= 0:
 		return
-	var dmg = status.poison_stacks
-	status.tick_poison()
-	if card_data and card_data.current_health > 0:
-		card_data.current_health -= dmg
-		$HealthLabel.text = str(card_data.current_health)
-		if card_data.current_health <= 0:
-			visuals.dissolve(die)
+	status.tick_poison(dmg)
+	card_data.current_health -= dmg
+	$HealthLabel.text = str(card_data.current_health)
+	if card_data.current_health <= 0:
+		visuals.dissolve(die)
 
 func die() -> void:
 	get_tree().get_first_node_in_group("hand").cards.erase(self)

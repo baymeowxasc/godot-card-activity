@@ -35,11 +35,12 @@ func add_poison(stacks: int = 1) -> void:
 	card.visuals.play_poison_apply_animation()
 	_animate_icon_appear(_poison_label)
 
-func tick_poison() -> void:
+func tick_poison(dmg: int = -1) -> void:
 	if poison_stacks <= 0:
 		return
-	card.visuals.play_poison_tick_animation(poison_stacks)
-	poison_stacks = maxi(poison_stacks - 1, 0)  
+	var actual_dmg = dmg if dmg > 0 else poison_stacks
+	card.visuals.play_poison_tick_animation(actual_dmg)
+	poison_stacks = maxi(poison_stacks - 1, 0)
 	if poison_stacks <= 0:
 		_animate_icon_disappear(_poison_label)
 	else:

@@ -17,8 +17,8 @@ func draw_card(data: CardData = null, deck_pos: Vector2 = Vector2.ZERO) -> void:
 	card.global_position = deck_pos
 	get_tree().root.add_child(card)
 	if data != null:
-		var data_copy = data.duplicate()  # each card owns its health
-		data_copy.current_health = data_copy.max_health  # ensure fresh health
+		var data_copy = data.duplicate()  
+		data_copy.current_health = data_copy.max_health  
 		card.setup(data_copy)
 	await get_tree().process_frame
 	card.play_draw_animation(deck_pos, card.drag.hand_position)
