@@ -87,6 +87,16 @@ func _animate_icon_appear(label: Label) -> void:
 	tween.tween_property(label, "scale", Vector2(1.0, 1.0), 0.25)
 	tween.tween_property(label, "modulate:a", 1.0, 0.2)
 
+func clear() -> void:
+	block_charges = 0
+	poison_stacks = 0
+	if _block_label:
+		_block_label.queue_free()
+		_block_label = null
+	if _poison_label:
+		_poison_label.queue_free()
+		_poison_label = null
+
 func _animate_icon_disappear(label: Label) -> void:
 	if label == null:
 		return

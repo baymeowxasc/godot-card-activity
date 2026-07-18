@@ -30,7 +30,6 @@ offset_left = -56.0
 offset_top = -81.0
 offset_right = -22.0
 offset_bottom = -44.0
-text = "12"
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1690292590]
 material = SubResource("ShaderMaterial_ya4ey")

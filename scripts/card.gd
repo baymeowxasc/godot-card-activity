@@ -55,6 +55,8 @@ func take_damage(amount: int) -> void:
 		return
 	card_data.current_health -= amount
 	$HealthLabel.text = str(card_data.current_health)
+	#if card_data.current_health < 0:
+		#visuals.
 	if card_data.current_health > 0:
 		visuals.play_hit_animation(amount)
 	else:

@@ -9,8 +9,11 @@ func _on_pressed() -> void:
 	var slot = get_node(target_slot)
 	if not slot or not slot.is_occupied:
 		return
+	var occupant = slot.occupant
+	if occupant.card_data == null or occupant.card_data.current_health <= 0:
+		return
 	match action:
 		Action.DAMAGE:
-			slot.occupant.take_damage(randi_range(1, 3))
+			occupant.take_damage(randi_range(1, 3))
 		Action.POISON:
-			slot.occupant.apply_poison(1)
+			occupant.apply_poison(1)

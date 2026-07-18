@@ -9,7 +9,7 @@ var graveyard: Node2D = null
 func get_hand() -> Node2D:
 	return get_tree().get_first_node_in_group("hand")
 
-func draw_card(data: CardData = null, deck_pos: Vector2 = Vector2.ZERO) -> void:
+func draw_card(data: Resource = null, deck_pos: Vector2 = Vector2.ZERO) -> void:
 	if card_scene == null:
 		push_error("CardManager: card_scene is not set")
 		return

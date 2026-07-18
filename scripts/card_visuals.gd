@@ -37,7 +37,6 @@ func play_hit_animation(amount: int) -> void:
 	var origin = sprite.position
 	var mat = get_material()
 
-	# Punch
 	var punch = clamp(amount * 2.0, 4.0, 20.0)
 	var scale_punch = clamp(0.2 + amount * 0.006, 0.2, 0.28)
 
@@ -77,6 +76,7 @@ func spawn_damage_number(amount: int) -> void:
 	tween.tween_property(label, "global_position", label.global_position + Vector2(randf_range(-10, 10), -55), 0.7)
 	tween.tween_property(label, "modulate:a", 0.0, 0.6).set_delay(0.2)
 	tween.tween_callback(label.queue_free).set_delay(0.75)
+	
 
 func play_block_animation() -> void:
 	var sprite = get_sprite()
@@ -165,6 +165,8 @@ func _spawn_damage_number_colored(amount: int, color: Color) -> void:
 	tween.tween_callback(label.queue_free).set_delay(0.75)
 
 func dissolve(on_complete: Callable) -> void:
+	card.status.clear()
+	card.set_health_label_visible(false)
 	var mat = get_material()
 	if mat == null:
 		on_complete.call()
@@ -174,6 +176,7 @@ func dissolve(on_complete: Callable) -> void:
 	tween.tween_callback(on_complete)
 
 func reappear() -> void:
+	get_sprite().scale = Vector2(0.2, 0.2)
 	var mat = get_material()
 	if mat == null:
 		return
