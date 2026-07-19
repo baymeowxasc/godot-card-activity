@@ -16,6 +16,7 @@ func get_health_label() -> Label:
 	return card.get_node("HealthLabel")
 
 func play_draw_animation(deck_pos: Vector2, hand_pos: Vector2) -> void:
+	card.is_drawing = true
 	card.global_position = deck_pos
 	card.drag.is_snapped = false
 	get_health_label().visible = false  
@@ -30,6 +31,11 @@ func play_draw_animation(deck_pos: Vector2, hand_pos: Vector2) -> void:
 	tween.tween_property(get_sprite(), "scale", Vector2(0.2, 0.2), 0.15)
 	tween.tween_callback(func():
 		get_health_label().visible = true  
+		card.is_drawing = false
+		if card.status._block_label:
+			card.status._block_label.visible = true
+		if card.status._poison_label:
+			card.status._poison_label.visible = true
 	)
 
 func play_hit_animation(amount: int) -> void:

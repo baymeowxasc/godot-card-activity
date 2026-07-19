@@ -7,6 +7,8 @@ var drag: CardDrag
 var visuals: CardVisuals
 var status: StatusEffect
 
+var is_drawing: bool = false
+
 func _ready() -> void:
 	add_to_group("cards")
 	$Sprite2D.material = $Sprite2D.material.duplicate()
@@ -36,7 +38,9 @@ func setup(data: CardData) -> void:
 		$Sprite2D.texture = data.back_texture
 	$Sprite2D.scale = Vector2(0.2, 0.2)
 	$HealthLabel.text = str(card_data.current_health)
-	$HealthLabel.z_index = 10  # draw on top of sprite
+	$HealthLabel.z_index = 10
+	$HealthLabel.add_theme_font_size_override("font_size", 22)
+	$HealthLabel.position = Vector2(-55, 58)
 	var starting_block = card_data.roll_starting_block()
 	if starting_block > 0:
 		status.add_block(starting_block)
@@ -94,12 +98,16 @@ func die() -> void:
 
 func _on_area_2d_mouse_entered() -> void:
 	drag.mouse_in = true
+	if status._block_label:
+		status._block_label.visible = false
 
 func _on_area_2d_mouse_exited() -> void:
 	drag.mouse_in = false
 	if not drag.is_dragging:
 		$Sprite2D.z_index = 0
 		drag.change_scale(Vector2(0.2, 0.2))
+	if status._block_label and not is_drawing:
+		status._block_label.visible = true
 
 func set_health_label_visible(value: bool) -> void:
 	$HealthLabel.visible = value
