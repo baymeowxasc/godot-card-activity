@@ -9,7 +9,7 @@ var graveyard: Node2D = null
 func get_hand() -> Node2D:
 	return get_tree().get_first_node_in_group("hand")
 
-func draw_card(data: CardData = null, deck_pos: Vector2 = Vector2.ZERO) -> void:
+func draw_card(data: Resource = null, deck_pos: Vector2 = Vector2.ZERO) -> void:
 	if card_scene == null:
 		push_error("CardManager: card_scene is not set")
 		return
@@ -17,8 +17,8 @@ func draw_card(data: CardData = null, deck_pos: Vector2 = Vector2.ZERO) -> void:
 	card.global_position = deck_pos
 	get_tree().root.add_child(card)
 	if data != null:
-		var data_copy = data.duplicate()  # each card owns its health
-		data_copy.current_health = data_copy.max_health  # ensure fresh health
+		var data_copy = data.duplicate()  
+		data_copy.current_health = data_copy.max_health  
 		card.setup(data_copy)
 	await get_tree().process_frame
 	card.play_draw_animation(deck_pos, card.drag.hand_position)

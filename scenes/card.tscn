@@ -28,9 +28,7 @@ script = ExtResource("1_6u4wf")
 [node name="HealthLabel" type="Label" parent="." unique_id=310356311]
 offset_left = -56.0
 offset_top = -81.0
-offset_right = -22.0
-offset_bottom = -44.0
-text = "12"
+offset_bottom = -27.0
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1690292590]
 material = SubResource("ShaderMaterial_ya4ey")

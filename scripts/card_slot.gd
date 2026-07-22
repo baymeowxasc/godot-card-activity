@@ -1,4 +1,3 @@
-# card_slot.gd
 extends Node2D
 
 var card_hovering: Node2D = null
