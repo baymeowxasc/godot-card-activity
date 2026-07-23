@@ -22,10 +22,13 @@ func add_block(charges: int = 1) -> void:
 
 func consume_block() -> void:
 	block_charges = maxi(block_charges - 1, 0)
-	card.visuals.play_block_animation()
+	print("charges after decrement: ", block_charges)
 	if block_charges <= 0:
+		print("triggering break_shield")
+		card.visuals.break_shield()
 		_animate_icon_disappear(_block_label)
 	else:
+		card.visuals.play_block_animation()
 		_refresh_block_label()
 
 func add_poison(stacks: int = 1) -> void:

@@ -189,3 +189,9 @@ func reappear() -> void:
 	mat.set_shader_parameter("dissolve_value", 0.0)
 	var tween = card.create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_LINEAR)
 	tween.tween_method(func(val: float): mat.set_shader_parameter("dissolve_value", val), 0.0, 1.0, 1.2)
+
+func break_shield() -> void:
+	var fx_scene = preload("res://scenes/shield_break_fx.tscn")
+	var fx = fx_scene.instantiate()
+	card.get_tree().current_scene.add_child(fx)
+	fx.play()
