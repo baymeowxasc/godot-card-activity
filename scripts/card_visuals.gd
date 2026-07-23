@@ -38,30 +38,6 @@ func play_draw_animation(deck_pos: Vector2, hand_pos: Vector2) -> void:
 			card.status._poison_label.visible = true
 	)
 
-func play_hit_animation(amount: int) -> void:
-	var sprite = get_sprite()
-	var origin = sprite.position
-	var mat = get_material()
-
-	var punch = clamp(amount * 2.0, 4.0, 20.0)
-	var scale_punch = clamp(0.2 + amount * 0.006, 0.2, 0.28)
-
-	var punch_tween = card.create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
-	punch_tween.tween_property(sprite, "position", origin + Vector2(punch, 0), 0.05)
-	punch_tween.tween_property(sprite, "scale", Vector2(scale_punch, scale_punch), 0.05)
-	punch_tween.tween_property(sprite, "position", origin, 0.3)
-	punch_tween.tween_property(sprite, "scale", Vector2(0.2, 0.2), 0.3)
-	
-	if mat:
-		mat.set_shader_parameter("flash_color", Color(1.0, 0.0, 0.0, 0.8))
-		var flash_tween = card.create_tween()
-		flash_tween.tween_method(
-			func(val: float): mat.set_shader_parameter("flash_color", Color(1.0, 0.0, 0.0, val)),
-			0.8, 0.0, 0.4
-		)
-
-	spawn_damage_number(amount)
-
 func spawn_damage_number(amount: int) -> void:
 	var label = Label.new()
 	label.text = str(amount)
@@ -83,63 +59,35 @@ func spawn_damage_number(amount: int) -> void:
 	tween.tween_property(label, "modulate:a", 0.0, 0.6).set_delay(0.2)
 	tween.tween_callback(label.queue_free).set_delay(0.75)
 	
+func _flash(color: Color, intensity: float, duration: float) -> void:
+	var mat = get_material()
+	if not mat:
+		return
+	mat.set_shader_parameter("flash_color", Color(color.r, color.g, color.b, intensity))
+	var tween = card.create_tween()
+	tween.tween_method(
+		func(val: float): mat.set_shader_parameter("flash_color", Color(color.r, color.g, color.b, val)),
+		intensity, 0.0, duration
+	)
+
+func play_hit_animation(amount: int) -> void:
+	card.get_node("AnimationPlayer").play("hit")
+	_flash(Color(1.0, 0.0, 0.0), 0.8, 0.4)
+	spawn_damage_number(amount)
 
 func play_block_animation() -> void:
-	var sprite = get_sprite()
-	var mat = get_material()
-	
-	var origin_scale = sprite.scale
-	var block_tween = card.create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
-	block_tween.tween_property(sprite, "scale", origin_scale * 1.12, 0.06)
-	block_tween.tween_property(sprite, "scale", origin_scale, 0.25)
-	
-	if mat:
-		mat.set_shader_parameter("flash_color", Color(0.6, 0.85, 1.0, 1.0))
-		var flash_tween = card.create_tween()
-		flash_tween.tween_method(
-			func(val: float): mat.set_shader_parameter("flash_color", Color(0.6, 0.85, 1.0, val)),
-			1.0, 0.0, 0.35
-		)
-		
+	card.get_node("AnimationPlayer").play("block")
+	_flash(Color(0.6, 0.85, 1.0), 1.0, 0.35)
 	_spawn_status_text("BLOCK", Color(0.5, 0.85, 1.0))
 
 func play_poison_apply_animation() -> void:
-	var sprite = get_sprite()
-	var mat = get_material()
-
-	var origin_rot = sprite.rotation
-	var wobble = card.create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
-	wobble.tween_property(sprite, "rotation", origin_rot - 0.12, 0.08)
-	wobble.tween_property(sprite, "rotation", origin_rot + 0.10, 0.10)
-	wobble.tween_property(sprite, "rotation", origin_rot, 0.12)
-	
-	if mat:
-		mat.set_shader_parameter("flash_color", Color(0.1, 1.0, 0.25, 0.9))
-		var flash_tween = card.create_tween()
-		flash_tween.tween_method(
-			func(val: float): mat.set_shader_parameter("flash_color", Color(0.1, 1.0, 0.25, val)),
-			0.9, 0.0, 0.5
-		)
-
+	card.get_node("AnimationPlayer").play("poison_apply")
+	_flash(Color(0.1, 1.0, 0.25), 0.9, 0.5)
 	_spawn_status_text("POISON", Color(0.2, 1.0, 0.3))
 
 func play_poison_tick_animation(stacks: int) -> void:
-	var sprite = get_sprite()
-	var mat = get_material()
-	var origin_scale = sprite.scale
-	
-	var swell = card.create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
-	swell.tween_property(sprite, "scale", origin_scale * 1.08, 0.12)
-	swell.tween_property(sprite, "scale", origin_scale, 0.22)
-	
-	if mat:
-		mat.set_shader_parameter("flash_color", Color(0.05, 0.85, 0.2, 0.6))
-		var flash_tween = card.create_tween()
-		flash_tween.tween_method(
-			func(val: float): mat.set_shader_parameter("flash_color", Color(0.05, 0.85, 0.2, val)),
-			0.6, 0.0, 0.45
-		)
-
+	card.get_node("AnimationPlayer").play("poison_tick")
+	_flash(Color(0.05, 0.85, 0.2), 0.6, 0.45)
 	_spawn_damage_number_colored(stacks, Color(0.2, 1.0, 0.3))
 
 func _spawn_status_text(text: String, color: Color) -> void:
