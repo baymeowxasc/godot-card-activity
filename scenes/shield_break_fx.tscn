@@ -54,6 +54,54 @@ tracks/3/keys = {
 "update": 0,
 "values": [Vector2(3, -41)]
 }
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("BottomHalf:rotation")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.06981317]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("TopHalf:rotation")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("TopHalf:modulate")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("BottomHalf:modulate")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
 
 [sub_resource type="Animation" id="Animation_4udw0"]
 resource_name = "break"
@@ -118,10 +166,10 @@ tracks/4/path = NodePath("BottomHalf:rotation")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
-"times": PackedFloat32Array(1, 1.2),
+"times": PackedFloat32Array(0.8, 1.2),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [0.0, 0.00698131700797692]
+"values": [0.0, 0.10471975511965978]
 }
 tracks/5/type = "value"
 tracks/5/imported = false
@@ -133,7 +181,7 @@ tracks/5/keys = {
 "times": PackedFloat32Array(0.8, 1.2),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [0.0, -0.00698131700797692]
+"values": [0.0, -0.10471975511965978]
 }
 tracks/6/type = "value"
 tracks/6/imported = false
@@ -166,10 +214,10 @@ tracks/8/path = NodePath("BottomHalf:scale")
 tracks/8/interp = 1
 tracks/8/loop_wrap = true
 tracks/8/keys = {
-"times": PackedFloat32Array(0, 0.15, 0.2),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(0, 0.15, 0.2, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(3.3, 3.3), Vector2(3, 3)]
+"values": [Vector2(0, 0), Vector2(3.3, 3.3), Vector2(3, 3), Vector2(3, 3)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_q4m3m"]
@@ -192,6 +240,7 @@ region_rect = Rect2(0, 0, 128, 64)
 [node name="BottomHalf" type="Sprite2D" parent="." unique_id=1000361205]
 modulate = Color(1, 1, 1, 0)
 position = Vector2(-7, 20)
+rotation = 0.06981317
 scale = Vector2(1e-05, 1e-05)
 texture = ExtResource("3_j68fs")
 region_rect = Rect2(0, 64, 128, 64)

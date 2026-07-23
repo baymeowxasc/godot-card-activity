@@ -54,14 +54,14 @@ func _ensure_block_label() -> void:
 		return
 	_block_label = _make_icon_label("🛡", Color(0.4, 0.7, 1.0))
 	card.add_child(_block_label)
-	_block_label.position = Vector2(10, 58)   # below card, left slot
+	_block_label.position = Vector2(10, 58)  
 
 func _ensure_poison_label() -> void:
 	if _poison_label != null:
 		return
 	_poison_label = _make_icon_label("☠", Color(0.2, 0.9, 0.2))
 	card.add_child(_poison_label)
-	_poison_label.position = Vector2(10, 88)    # below card, right of block
+	_poison_label.position = Vector2(10, 88)    
 
 func _make_icon_label(icon: String, color: Color) -> Label:
 	var label := Label.new()
