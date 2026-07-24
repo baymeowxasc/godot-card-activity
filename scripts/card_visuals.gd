@@ -2,9 +2,11 @@ extends Node
 class_name CardVisuals
 
 var card: Node2D
+var _anim: AnimationPlayer
 
 func init(parent: Node2D) -> void:
 	card = parent
+	_anim = parent.get_node("AnimationPlayer")
 	
 func get_sprite() -> Sprite2D:
 	return card.get_node("Sprite2D")
@@ -38,24 +40,27 @@ func play_draw_animation(deck_pos: Vector2, hand_pos: Vector2) -> void:
 			card.status._poison_label.visible = true
 	)
 
-func spawn_damage_number(amount: int) -> void:
+func spawn_damage_number(amount: int, color: Color = Color.WHITE, prefix: String = "") -> void:
 	var label = Label.new()
-	label.text = str(amount)
-	label.add_theme_font_size_override("font_size", clamp(16 + amount * 3, 20, 42))
+	label.text = prefix + str(amount)
+	label.add_theme_font_size_override("font_size", clamp(16 + amount * 3, 18, 42))
 
-	if amount >= 3:
-		label.modulate = Color(1.0, 0.2, 0.2)
-	elif amount >= 2:
-		label.modulate = Color(1.0, 0.6, 0.0)
+	if color == Color.WHITE:
+		if amount >= 3:
+			label.modulate = Color(1.0, 0.2, 0.2)
+		elif amount >= 2:
+			label.modulate = Color(1.0, 0.6, 0.0)
+		else:
+			label.modulate = Color(1.0, 1.0, 0.2)
 	else:
-		label.modulate = Color(1.0, 1.0, 0.2)
+		label.modulate = color
 
 	var scene_root = card.get_tree().current_scene
 	scene_root.add_child(label)
 	label.global_position = card.global_position + Vector2(randf_range(-15, 15), -60)
 
 	var tween = card.create_tween().set_parallel(true)
-	tween.tween_property(label, "global_position", label.global_position + Vector2(randf_range(-10, 10), -55), 0.7)
+	tween.tween_property(label, "global_position", label.global_position + Vector2(randf_range(-10, 10), -52), 0.7)
 	tween.tween_property(label, "modulate:a", 0.0, 0.6).set_delay(0.2)
 	tween.tween_callback(label.queue_free).set_delay(0.75)
 	
@@ -71,24 +76,24 @@ func _flash(color: Color, intensity: float, duration: float) -> void:
 	)
 
 func play_hit_animation(amount: int) -> void:
-	card.get_node("AnimationPlayer").play("hit")
+	_anim.play("hit")         
 	_flash(Color(1.0, 0.0, 0.0), 0.8, 0.4)
 	spawn_damage_number(amount)
 
 func play_block_animation() -> void:
-	card.get_node("AnimationPlayer").play("block")
+	_anim.play("block")       
 	_flash(Color(0.6, 0.85, 1.0), 1.0, 0.35)
 	_spawn_status_text("BLOCK", Color(0.5, 0.85, 1.0))
 
 func play_poison_apply_animation() -> void:
-	card.get_node("AnimationPlayer").play("poison_apply")
+	_anim.play("poison_apply") 
 	_flash(Color(0.1, 1.0, 0.25), 0.9, 0.5)
 	_spawn_status_text("POISON", Color(0.2, 1.0, 0.3))
 
 func play_poison_tick_animation(stacks: int) -> void:
-	card.get_node("AnimationPlayer").play("poison_tick")
+	_anim.play("poison_tick")  
 	_flash(Color(0.05, 0.85, 0.2), 0.6, 0.45)
-	_spawn_damage_number_colored(stacks, Color(0.2, 1.0, 0.3))
+	spawn_damage_number(stacks, Color(0.2, 1.0, 0.3), "-")
 
 func _spawn_status_text(text: String, color: Color) -> void:
 	var label = Label.new()
@@ -103,20 +108,6 @@ func _spawn_status_text(text: String, color: Color) -> void:
 	tween.tween_property(label, "global_position", label.global_position + Vector2(randf_range(-8, 8), -38), 0.65)
 	tween.tween_property(label, "modulate:a", 0.0, 0.55).set_delay(0.15)
 	tween.tween_callback(label.queue_free).set_delay(0.7)
-
-func _spawn_damage_number_colored(amount: int, color: Color) -> void:
-	var label = Label.new()
-	label.text = "-%d" % amount
-	label.add_theme_font_size_override("font_size", clamp(16 + amount * 3, 18, 36))
-	label.modulate = color
-	var scene_root = card.get_tree().current_scene
-	scene_root.add_child(label)
-	label.global_position = card.global_position + Vector2(randf_range(-15, 15), -60)
-
-	var tween = card.create_tween().set_parallel(true)
-	tween.tween_property(label, "global_position", label.global_position + Vector2(randf_range(-10, 10), -50), 0.7)
-	tween.tween_property(label, "modulate:a", 0.0, 0.6).set_delay(0.2)
-	tween.tween_callback(label.queue_free).set_delay(0.75)
 
 func dissolve(on_complete: Callable) -> void:
 	card.status.clear()

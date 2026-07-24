@@ -2,6 +2,8 @@ extends Node
 class_name CardDrag
 
 var card: Node2D
+var _sprite: Sprite2D
+var _shadow: Node2D
 var mouse_in: bool = false
 var is_dragging: bool = false
 var is_snapped: bool = false
@@ -15,12 +17,8 @@ var scale_tween: Tween
 
 func init(parent: Node2D) -> void:
 	card = parent
-
-func get_sprite() -> Sprite2D:
-	return card.get_node("Sprite2D")
-
-func get_shadow() -> Node2D:
-	return card.get_node("Sprite2D/shadow")
+	_sprite = parent.get_node("Sprite2D")
+	_shadow = parent.get_node("Sprite2D/shadow")
 
 func snap_to(pos: Vector2) -> void:
 	is_snapped = true
@@ -38,7 +36,7 @@ func set_hand_position(pos: Vector2, index: int) -> void:
 	snap_to(pos)
 
 func process(delta: float) -> void:
-	get_shadow().position = Vector2(-12, 12).rotated(get_sprite().rotation)
+	_shadow.position = Vector2(-12, 12).rotated(_sprite.rotation)
 	if is_dragging:
 		_update_drag_position(delta)
 	elif is_snapped:
@@ -50,15 +48,15 @@ func _update_drag_position(delta: float) -> void:
 	var target_pos = card.get_global_mouse_position()
 	var screen_size = card.get_viewport_rect().size
 	var half = Vector2(
-		get_sprite().texture.get_width() * get_sprite().scale.x,
-		get_sprite().texture.get_height() * get_sprite().scale.y
+		_sprite.texture.get_width() * _sprite.scale.x,
+		_sprite.texture.get_height() * _sprite.scale.y
 	) * 0.5
 	target_pos = target_pos.clamp(half, screen_size - half)
 	card.global_position = lerp(card.global_position, target_pos, 22.0 * delta)
 
 func _update_snap_position(delta: float) -> void:
 	card.global_position = lerp(card.global_position, snap_target, 18.0 * delta)
-	get_sprite().rotation_degrees = lerp(get_sprite().rotation_degrees, 0.0, 12.0 * delta)
+	_sprite.rotation_degrees = lerp(_sprite.rotation_degrees, 0.0, 12.0 * delta)
 
 func _handle_mouse_input(delta: float) -> void:
 	if card.current_slot != null:
@@ -74,7 +72,7 @@ func _start_drag(delta: float) -> void:
 	is_snapped = false
 	Mousebrain.node_being_dragged = card
 	_set_rotation(delta)
-	get_sprite().z_index = 100
+	_sprite.z_index = 100
 	if card.current_slot != null:
 		card.current_slot.on_card_removed()
 		card.current_slot = null
@@ -90,7 +88,7 @@ func _stop_drag() -> void:
 
 func _set_rotation(delta: float) -> void:
 	var desired = clamp((card.global_position - last_pos).x * 0.85, -max_card_rotation, max_card_rotation)
-	get_sprite().rotation_degrees = lerp(get_sprite().rotation_degrees, desired, 12.0 * delta)
+	_sprite.rotation_degrees = lerp(_sprite.rotation_degrees, desired, 12.0 * delta)
 	last_pos = card.global_position
 
 func _update_scale_and_zindex(_delta: float) -> void:
@@ -98,11 +96,11 @@ func _update_scale_and_zindex(_delta: float) -> void:
 		change_scale(Vector2(0.26, 0.26))
 	elif mouse_in and Mousebrain.node_being_dragged == null and card.current_slot == null:
 		change_scale(Vector2(0.24, 0.24))
-		get_sprite().z_index = 430
+		_sprite.z_index = 430
 	else:
 		change_scale(Vector2(0.2, 0.2))
 		if not is_dragging:
-			get_sprite().z_index = 0
+			_sprite.z_index = 0
 
 func change_scale(desired: Vector2) -> void:
 	if desired == current_goal_scale:
@@ -110,5 +108,5 @@ func change_scale(desired: Vector2) -> void:
 	if scale_tween:
 		scale_tween.kill()
 	scale_tween = card.create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
-	scale_tween.tween_property(get_sprite(), "scale", desired, 0.125)
+	scale_tween.tween_property(_sprite, "scale", desired, 0.125)
 	current_goal_scale = desired

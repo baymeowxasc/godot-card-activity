@@ -13,4 +13,4 @@ func receive(card: Node2D) -> void:
 	var offset = Vector2(buried.size() * 2, buried.size() * -2)
 	card.global_position = global_position + offset
 	card.visible = true
-	card.reappear()
+	card.visuals.reappear()

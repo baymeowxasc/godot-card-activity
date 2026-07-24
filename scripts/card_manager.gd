@@ -21,7 +21,7 @@ func draw_card(data: Resource = null, deck_pos: Vector2 = Vector2.ZERO) -> void:
 		data_copy.current_health = data_copy.max_health  
 		card.setup(data_copy)
 	await get_tree().process_frame
-	card.play_draw_animation(deck_pos, card.drag.hand_position)
+	card.visuals.play_draw_animation(deck_pos, card.drag.hand_position)
 
 func discard_card(card: Node2D) -> void:
 	get_hand().remove_card(card)

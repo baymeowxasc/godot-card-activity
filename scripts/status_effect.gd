@@ -16,25 +16,23 @@ func has_block() -> bool:
 
 func add_block(charges: int = 1) -> void:
 	block_charges += charges
-	_ensure_block_label()
-	_refresh_block_label()
+	_block_label = _ensure_status_label(_block_label, "🛡", Color(0.4, 0.7, 1.0), Vector2(10, 58))
+	_refresh_label(_block_label, "🛡", block_charges)
 	_animate_icon_appear(_block_label)
 
 func consume_block() -> void:
 	block_charges = maxi(block_charges - 1, 0)
-	print("charges after decrement: ", block_charges)
 	if block_charges <= 0:
-		print("triggering break_shield")
 		card.visuals.break_shield()
 		_animate_icon_disappear(_block_label)
 	else:
 		card.visuals.play_block_animation()
-		_refresh_block_label()
+		_refresh_label(_block_label, "🛡", block_charges)
 
 func add_poison(stacks: int = 1) -> void:
 	poison_stacks += stacks
-	_ensure_poison_label()
-	_refresh_poison_label()
+	_poison_label = _ensure_status_label(_poison_label, "☠", Color(0.2, 0.9, 0.2), Vector2(10, 88))
+	_refresh_label(_poison_label, "☠", poison_stacks)
 	card.visuals.play_poison_apply_animation()
 	_animate_icon_appear(_poison_label)
 
@@ -47,21 +45,15 @@ func tick_poison(dmg: int = -1) -> void:
 	if poison_stacks <= 0:
 		_animate_icon_disappear(_poison_label)
 	else:
-		_refresh_poison_label()
+		_refresh_label(_poison_label, "☠", poison_stacks)
 
-func _ensure_block_label() -> void:
-	if _block_label != null:
-		return
-	_block_label = _make_icon_label("🛡", Color(0.4, 0.7, 1.0))
-	card.add_child(_block_label)
-	_block_label.position = Vector2(10, 58)  
-
-func _ensure_poison_label() -> void:
-	if _poison_label != null:
-		return
-	_poison_label = _make_icon_label("☠", Color(0.2, 0.9, 0.2))
-	card.add_child(_poison_label)
-	_poison_label.position = Vector2(10, 88)    
+func _ensure_status_label(label: Label, icon: String, color: Color, offset: Vector2) -> Label:
+	if label != null:
+		return label
+	var l = _make_icon_label(icon, color)
+	card.add_child(l)
+	l.position = offset
+	return l
 
 func _make_icon_label(icon: String, color: Color) -> Label:
 	var label := Label.new()
@@ -72,13 +64,9 @@ func _make_icon_label(icon: String, color: Color) -> Label:
 	label.z_index = 20
 	return label
 
-func _refresh_block_label() -> void:
-	if _block_label:
-		_block_label.text = "🛡" if block_charges == 1 else "🛡x%d" % block_charges
-
-func _refresh_poison_label() -> void:
-	if _poison_label:
-		_poison_label.text = "☠" if poison_stacks == 1 else "☠x%d" % poison_stacks
+func _refresh_label(label: Label, icon: String, count: int) -> void:
+	if label:
+		label.text = icon if count == 1 else "%sx%d" % [icon, count]
 
 func _animate_icon_appear(label: Label) -> void:
 	if label == null:

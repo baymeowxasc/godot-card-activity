@@ -15,6 +15,8 @@
 [node name="Main" type="Node2D" unique_id=239487072]
 script = ExtResource("1_jyhfs")
 card_scene = ExtResource("1_ig7tw")
+metadata/_edit_vertical_guides_ = [48.0, 162.0, 564.0]
+metadata/_edit_horizontal_guides_ = [320.0, 142.0, 127.0]
 
 [node name="CardManager" type="Node" parent="." unique_id=441663220]
 script = ExtResource("3_tefeu")
@@ -23,14 +25,14 @@ script = ExtResource("3_tefeu")
 position = Vector2(564, 231)
 
 [node name="Deck" parent="." unique_id=1033326479 instance=ExtResource("7_o6xl0")]
-position = Vector2(95, 515)
+position = Vector2(105, 509)
 card_data_list = Array[ExtResource("8_85g3d")]([ExtResource("9_choun"), ExtResource("9_choun"), ExtResource("9_choun"), ExtResource("9_choun"), ExtResource("9_choun")])
 
 [node name="Hand" type="Node2D" parent="." unique_id=825653170 groups=["hand"]]
 script = ExtResource("4_jyhfs")
 
 [node name="Graveyard" type="Node2D" parent="." unique_id=577332699]
-position = Vector2(100, 231)
+position = Vector2(103, 231)
 script = ExtResource("9_ya4ey")
 
 [node name="ColorRect" type="ColorRect" parent="Graveyard" unique_id=1261784027]
@@ -45,19 +47,19 @@ metadata/_edit_use_anchors_ = true
 position = Vector2(1093, 580)
 
 [node name="Button" type="Button" parent="." unique_id=1698874099]
-offset_left = 433.0
-offset_top = 95.0
-offset_right = 547.0
-offset_bottom = 126.0
+offset_left = 442.0
+offset_top = 96.0
+offset_right = 556.0
+offset_bottom = 127.0
 text = "Deal Damage"
 script = ExtResource("11_ya4ey")
 target_slot = NodePath("../CardSlot")
 
 [node name="Button2" type="Button" parent="." unique_id=578787495]
-offset_left = 570.0
-offset_top = 95.0
-offset_right = 684.0
-offset_bottom = 126.0
+offset_left = 572.0
+offset_top = 96.0
+offset_right = 686.0
+offset_bottom = 127.0
 text = "Deal Poison"
 script = ExtResource("11_ya4ey")
 target_slot = NodePath("../CardSlot")

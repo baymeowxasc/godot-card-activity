@@ -15,5 +15,5 @@ void fragment(){
 
     COLOR.a *= threshold;
     COLOR.rgb = mix(burn_color.rgb, main_texture.rgb, border);
-    COLOR.rgb = mix(COLOR.rgb, flash_color.rgb, flash_color.a);  // <- add this
+    COLOR.rgb = mix(COLOR.rgb, flash_color.rgb, flash_color.a); 
 }

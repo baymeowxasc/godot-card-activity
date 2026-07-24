@@ -7,10 +7,8 @@ var mouse_in: bool = false
 
 func _ready() -> void:
 	add_to_group("deck")
-	print("card_data_list size: ", card_data_list.size())
 	draw_pile = card_data_list.duplicate()
 	draw_pile.shuffle()
-	print("draw_pile size: ", draw_pile.size())
 
 func _on_area_2d_mouse_entered() -> void:
 	mouse_in = true
@@ -24,11 +22,9 @@ func _process(_delta: float) -> void:
 
 func draw_card() -> void:
 	if draw_pile.is_empty():
-		print("deck is empty")
 		return
 	var data = draw_pile.pop_back()
 	CardManager.draw_card(data, global_position)
-	print("card drawn")
 
 func is_empty() -> bool:
 	return draw_pile.is_empty()

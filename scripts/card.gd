@@ -37,7 +37,7 @@ func setup(data: CardData) -> void:
 	if data.back_texture:
 		$Sprite2D.texture = data.back_texture
 	$Sprite2D.scale = Vector2(0.2, 0.2)
-	$HealthLabel.text = str(card_data.current_health)
+	_refresh_health_label()
 	$HealthLabel.z_index = 10
 	$HealthLabel.add_theme_font_size_override("font_size", 22)
 	$HealthLabel.position = Vector2(-55, 58)
@@ -45,11 +45,8 @@ func setup(data: CardData) -> void:
 	if starting_block > 0:
 		status.add_block(starting_block)
 
-func play_draw_animation(deck_pos: Vector2, hand_pos: Vector2) -> void:
-	visuals.play_draw_animation(deck_pos, hand_pos)
-
-func reappear() -> void:
-	visuals.reappear()
+func _refresh_health_label() -> void:
+	visuals.get_health_label().text = str(card_data.current_health)
 
 func take_damage(amount: int) -> void:
 	if card_data == null:
@@ -58,7 +55,7 @@ func take_damage(amount: int) -> void:
 		status.consume_block()
 		return
 	card_data.current_health -= amount
-	$HealthLabel.text = str(card_data.current_health)
+	_refresh_health_label()                           
 	if card_data.current_health > 0:
 		visuals.play_hit_animation(amount)
 	else:
@@ -69,9 +66,9 @@ func apply_poison(_unused: int = 1) -> void:
 	var damages: Array[int] = []
 	for i in ticks:
 		damages.append(randi_range(1, 3))
-
+		
 	status.add_poison(ticks)
-
+	
 	for i in ticks:
 		var delay = 0.35 + i * 0.55
 		get_tree().create_timer(delay).timeout.connect(
@@ -83,7 +80,7 @@ func _do_poison_tick(dmg: int) -> void:
 		return
 	status.tick_poison(dmg)
 	card_data.current_health -= dmg
-	$HealthLabel.text = str(card_data.current_health)
+	_refresh_health_label()                            
 	if card_data.current_health <= 0:
 		visuals.dissolve(die)
 
